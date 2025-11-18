@@ -9,6 +9,9 @@ export interface WarehouseData {
   ordersPackedPerHour: number;
   workHours: number;
   currentEmployees: number;
+  // New logistic parameters
+  breakTime: number; // in minutes
+  processEfficiency: number; // in percentage (0-100)
 }
 
 export interface CalculationResult {
@@ -18,4 +21,5 @@ export interface CalculationResult {
   total: number;
   buffer: number;
   needed: number;
+  effectiveWorkHours: number; // For display purposes
 }

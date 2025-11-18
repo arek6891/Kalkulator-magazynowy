@@ -3,7 +3,7 @@ import React from 'react';
 import { WarehouseData } from '../types';
 import InputField from './InputField';
 import Button from './Button';
-import { Package, Truck, Download, Users } from 'lucide-react';
+import { Package, Truck, Download, Settings } from 'lucide-react';
 
 interface CalculatorFormProps {
     data: WarehouseData;
@@ -28,7 +28,7 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
             
             <form onSubmit={(e) => { e.preventDefault(); onCalculate(); }} className="space-y-6">
                 <fieldset className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <legend className="text-lg font-semibold flex items-center gap-2 mb-3">
+                    <legend className="text-lg font-semibold flex items-center gap-2 mb-3 text-text">
                         <Truck size={20} className="text-primary" />
                         Dostawy
                     </legend>
@@ -40,7 +40,7 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                 </fieldset>
                 
                 <fieldset className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                     <legend className="text-lg font-semibold flex items-center gap-2 mb-3">
+                     <legend className="text-lg font-semibold flex items-center gap-2 mb-3 text-text">
                         <Package size={20} className="text-primary" />
                         Zlecenia
                     </legend>
@@ -52,14 +52,29 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                     </div>
                 </fieldset>
                 
-                <InputField label="Obecna liczba pracowników" name="currentEmployees" value={data.currentEmployees} onChange={handleChange} />
-                <InputField label="Godziny pracy zmiany" name="workHours" value={data.workHours} onChange={handleChange} />
+                <fieldset className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                     <legend className="text-lg font-semibold flex items-center gap-2 mb-3 text-text">
+                        <Settings size={20} className="text-primary" />
+                        Parametry Pracy (Standardy)
+                    </legend>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <InputField label="Godziny pracy zmiany" name="workHours" value={data.workHours} onChange={handleChange} />
+                        <InputField label="Obecna liczba pracowników" name="currentEmployees" value={data.currentEmployees} onChange={handleChange} />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <InputField label="Czas przerw (minuty)" name="breakTime" value={data.breakTime} onChange={handleChange} />
+                        <InputField label="Wydajność procesu (%)" name="processEfficiency" value={data.processEfficiency} onChange={handleChange} />
+                    </div>
+                    <p className="text-xs text-text-secondary mt-2">
+                        * Standard logistyczny zakłada ok. 15-30 min przerwy i 85-90% OEE (efektywności).
+                    </p>
+                </fieldset>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <Button type="submit" fullWidth>Oblicz</Button>
-                    <Button onClick={onImport} variant="secondary" fullWidth>
+                    <Button type="submit" fullWidth>Oblicz FTE</Button>
+                    <Button onClick={onImport} variant="secondary" fullWidth type="button">
                         <Download size={16} className="mr-2"/>
-                        Importuj dane
+                        Przykładowe dane
                     </Button>
                 </div>
             </form>

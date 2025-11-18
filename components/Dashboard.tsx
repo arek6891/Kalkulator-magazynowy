@@ -4,33 +4,21 @@ import { CalculationResult, WarehouseData } from '../types';
 import WorkerChart from './WorkerChart';
 import WorkloadChart from './WorkloadChart';
 import ChartCard from './ChartCard';
-import { Users, AlertCircle } from 'lucide-react';
+import { Users, AlertCircle, Clock } from 'lucide-react';
 
 interface DashboardProps {
     result: CalculationResult | null;
     inputData: WarehouseData;
 }
 
-const StatCard: React.FC<{ title: string; value: string | number; icon: React.ReactNode }> = ({ title, value, icon }) => (
-    <div className="bg-card p-4 rounded-lg shadow-md flex items-center gap-4 border border-gray-200 dark:border-gray-700">
-        <div className="p-3 bg-primary/10 text-primary rounded-full">
-            {icon}
-        </div>
-        <div>
-            <p className="text-sm text-text-secondary">{title}</p>
-            <p className="text-2xl font-bold text-text">{value}</p>
-        </div>
-    </div>
-);
-
 const Dashboard: React.FC<DashboardProps> = ({ result, inputData }) => {
     if (!result) {
         return (
             <div className="flex flex-col items-center justify-center h-full bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
                 <Users size={64} className="text-text-secondary mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Oczekiwanie na dane</h3>
+                <h3 className="text-2xl font-bold mb-2 text-text">Oczekiwanie na dane</h3>
                 <p className="text-text-secondary max-w-sm">
-                    Wprowadź dane w formularzu po lewej stronie i kliknij "Oblicz", aby zobaczyć wyniki.
+                    Wprowadź dane w formularzu po lewej stronie i kliknij "Oblicz FTE", aby zobaczyć wyniki wg standardów.
                 </p>
             </div>
         );
@@ -42,7 +30,7 @@ const Dashboard: React.FC<DashboardProps> = ({ result, inputData }) => {
                 <AlertCircle size={64} className="text-red-500 mb-4" />
                 <h3 className="text-2xl font-bold mb-2 text-red-600 dark:text-red-400">Błąd w danych</h3>
                 <p className="text-text-secondary max-w-sm">
-                    Sprawdź, czy pole "Godziny pracy zmiany" ma wartość większą od zera oraz czy wydajność (np. dostaw na godzinę) nie jest zerowa dla zadań z obciążeniem.
+                    Sprawdź, czy pole "Godziny pracy zmiany" ma wartość większą od zera oraz czy wydajność (np. dostaw na godzinę) nie jest zerowa.
                 </p>
             </div>
         )
@@ -64,37 +52,54 @@ const Dashboard: React.FC<DashboardProps> = ({ result, inputData }) => {
     return (
         <div className="space-y-8">
              <div className="p-6 bg-card rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 text-center">
-                <h2 className="text-lg font-semibold text-text-secondary">Potrzebni dodatkowi pracownicy</h2>
+                <div className="flex justify-between items-start mb-4">
+                     <div className="text-left">
+                        <h2 className="text-lg font-semibold text-text-secondary">Zapotrzebowanie (FTE)</h2>
+                        <p className="text-xs text-text-secondary">Full Time Equivalent</p>
+                     </div>
+                     <div className="text-right bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
+                        <p className="text-xs text-text-secondary flex items-center justify-end gap-1">
+                             <Clock size={12} /> Efektywny czas pracy
+                        </p>
+                        <p className="font-mono font-bold text-text">{result.effectiveWorkHours}h / os.</p>
+                     </div>
+                </div>
+
                 <p className={`text-6xl font-extrabold my-2 ${neededColor}`}>
-                    {result.needed}
+                    {result.needed > 0 ? `+${result.needed}` : "0"}
                 </p>
+                {result.needed > 0 && <p className="text-text-secondary mb-4">dodatkowych pracowników</p>}
+                
                  {isSurplus && (
-                    <p className="text-green-500 font-semibold -mt-2 mb-2">
+                    <p className="text-green-500 font-semibold -mt-2 mb-4">
                         (Nadmiar pracowników: {inputData.currentEmployees - result.total})
                     </p>
                  )}
 
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 flex justify-around items-center text-text">
-                    <div>
-                        <p className="text-xs text-text-secondary uppercase tracking-wider">Sugerowana</p>
-                        <p className="text-xl font-bold">{result.total}</p>
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 grid grid-cols-3 gap-4 text-text">
+                    <div className="flex flex-col items-center">
+                        <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Wymagane</p>
+                        <p className="text-2xl font-bold text-primary">{result.total}</p>
                     </div>
-                     <div>
-                        <p className="text-xs text-text-secondary uppercase tracking-wider">Obecnie</p>
-                        <p className="text-xl font-bold">{inputData.currentEmployees}</p>
+                     <div className="flex flex-col items-center border-l border-r border-gray-200 dark:border-gray-600">
+                        <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Obecnie</p>
+                        <p className="text-2xl font-bold">{inputData.currentEmployees}</p>
                     </div>
-                     <div>
-                        <p className="text-xs text-text-secondary uppercase tracking-wider">Bufor</p>
-                        <p className="text-xl font-bold">{result.buffer}</p>
+                     <div className="flex flex-col items-center relative group cursor-help">
+                        <p className="text-xs text-text-secondary uppercase tracking-wider mb-1 underline decoration-dotted">Narzut</p>
+                        <p className="text-2xl font-bold text-orange-500">{result.buffer}</p>
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity w-48 pointer-events-none z-10 shadow-xl">
+                            Dodatkowi pracownicy wynikający z przerw ({inputData.breakTime}min) i wydajności ({inputData.processEfficiency}%)
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <ChartCard title="Podział pracowników wg ról">
+                <ChartCard title="Podział etatu (FTE)">
                     <WorkerChart data={workerData} />
                 </ChartCard>
-                <ChartCard title="Stosunek dostaw do zleceń">
+                <ChartCard title="Wolumen operacyjny">
                     <WorkloadChart data={workloadData} />
                 </ChartCard>
             </div>

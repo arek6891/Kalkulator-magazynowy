@@ -5,6 +5,7 @@ import { calculateWorkforce } from './services/calculationService';
 import CalculatorForm from './components/CalculatorForm';
 import Dashboard from './components/Dashboard';
 import Header from './components/Header';
+import CalculationInfoModal from './components/CalculationInfoModal';
 import { Sun, Moon } from 'lucide-react';
 
 const mockData: WarehouseData = {
@@ -17,6 +18,8 @@ const mockData: WarehouseData = {
     ordersPackedPerHour: 6,
     workHours: 8,
     currentEmployees: 15,
+    breakTime: 30,
+    processEfficiency: 85,
 };
 
 const initialWarehouseData: WarehouseData = {
@@ -29,12 +32,15 @@ const initialWarehouseData: WarehouseData = {
     ordersPackedPerHour: 0,
     workHours: 8,
     currentEmployees: 0,
+    breakTime: 30, // Default standard
+    processEfficiency: 85, // Default standard
 };
 
 function App() {
     const [data, setData] = useState<WarehouseData>(initialWarehouseData);
     const [result, setResult] = useState<CalculationResult | null>(null);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isInfoOpen, setIsInfoOpen] = useState(false);
 
     const handleCalculate = useCallback(() => {
         const calculation = calculateWorkforce(data);
@@ -54,7 +60,7 @@ function App() {
 
     return (
         <div className="min-h-screen bg-background text-text font-sans transition-colors duration-300">
-            <Header />
+            <Header onOpenInfo={() => setIsInfoOpen(true)} />
              <button
                 onClick={toggleDarkMode}
                 className="fixed top-4 right-4 z-50 p-2 rounded-full bg-card text-text-secondary hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -77,6 +83,11 @@ function App() {
                     </div>
                 </div>
             </main>
+            
+            <CalculationInfoModal 
+                isOpen={isInfoOpen} 
+                onClose={() => setIsInfoOpen(false)} 
+            />
         </div>
     );
 }
