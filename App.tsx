@@ -73,19 +73,15 @@ function App() {
         localStorage.setItem('warehouseCalculatorSettings', JSON.stringify(settings));
     }, [settings]);
 
-    // Clear AI analysis when key data changes significantly to avoid stale insights
-    useEffect(() => {
-        setAiAnalysis(null);
-    }, [data.deliveries, data.orders, data.workHours, data.currentEmployees]);
-
     const handleCalculate = useCallback(() => {
         const calculation = calculateWorkforce(data);
         setResult(calculation);
+        // Clear previous AI analysis on new calculation as it might be outdated
+        setAiAnalysis(null);
     }, [data]);
 
     const handleImport = useCallback(() => {
-        // Mock data needs to respect current settings for consistency
-        setData({ 
+        const mockData: WarehouseData = { 
             deliveries: 25,
             itemsPerDelivery: 100,
             deliveriesPerHour: 2,
@@ -98,24 +94,14 @@ function App() {
             breakTime: settings.defaultBreakTime,
             processEfficiency: settings.defaultEfficiency,
             date: new Date().toISOString().split('T')[0] 
-        });
-        // We calculate immediately after setting state, but since state update is async, 
-        // in a real effect loop it would be safer. For this simple mock, we calculate on the mock values directly.
-        const mockCalculation = calculateWorkforce({
-             deliveries: 25,
-            itemsPerDelivery: 100,
-            deliveriesPerHour: 2,
-            orders: 150,
-            itemsPerOrder: 5,
-            itemsPickedPerHour: 60,
-            ordersPackedPerHour: 6,
-            workHours: settings.defaultWorkHours,
-            currentEmployees: 15,
-            breakTime: settings.defaultBreakTime,
-            processEfficiency: settings.defaultEfficiency,
-            date: new Date().toISOString().split('T')[0] 
-        });
+        };
+
+        setData(mockData);
+        
+        // Calculate immediately using the mock data object to avoid state update latency
+        const mockCalculation = calculateWorkforce(mockData);
         setResult(mockCalculation);
+        setAiAnalysis(null);
     }, [settings]);
 
     const handleGenerateAiAnalysis = async () => {
@@ -159,13 +145,17 @@ function App() {
     };
 
     const handleEditHistory = (record: HistoryRecord) => {
+        // First set the data
         setData(record.data);
         setResult(record.result);
+        
+        // Explicitly handle AI analysis state
         if (record.aiAnalysis) {
             setAiAnalysis(record.aiAnalysis);
         } else {
             setAiAnalysis(null);
         }
+        
         setCurrentView('calculator');
     };
 
@@ -177,8 +167,6 @@ function App() {
 
     const handleUpdateSettings = (newSettings: AppSettings) => {
         setSettings(newSettings);
-        // Optionally ask user if they want to apply to current view, for now we just save.
-        // If current data is "empty" or default, we could auto-update, but it's safer to leave user input alone.
     };
 
     const handleExportExcel = () => {

@@ -30,8 +30,6 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
             ...prev,
             ...parsed
         }));
-        // Optional: Auto trigger calculate if enough data
-        // onCalculate(); 
     };
 
     return (
@@ -76,13 +74,12 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                  </button>
             </div>
             
-            <form onSubmit={(e) => { e.preventDefault(); onCalculate(); }} className="space-y-5 flex-grow overflow-y-auto pr-2 custom-scrollbar">
+            <form onSubmit={(e) => { e.preventDefault(); onCalculate(); }} className="space-y-6 flex-grow overflow-y-auto pr-2 custom-scrollbar">
                 
-                <fieldset className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 pt-4 relative">
-                    <legend className="text-sm font-semibold flex items-center gap-2 px-2 text-text bg-card absolute -top-3 left-2">
-                        <span className="p-1 bg-blue-100 dark:bg-blue-900/30 rounded text-blue-600 dark:text-blue-400">
-                            <Truck size={16} />
-                        </span>
+                {/* Sekcja Dostawy - Styl Niebieski */}
+                <fieldset className="border-2 border-blue-100 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl p-4 pt-5 relative shadow-sm transition-colors hover:border-blue-200 dark:hover:border-blue-800">
+                    <legend className="text-sm font-bold flex items-center gap-2 px-3 py-1 rounded-lg text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 absolute -top-3 left-3 shadow-sm border border-blue-200 dark:border-blue-800">
+                        <Truck size={16} />
                         Dostawy
                     </legend>
                     <div className="space-y-3 mt-1">
@@ -92,11 +89,10 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                     </div>
                 </fieldset>
                 
-                <fieldset className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 pt-4 relative">
-                     <legend className="text-sm font-semibold flex items-center gap-2 px-2 text-text bg-card absolute -top-3 left-2">
-                        <span className="p-1 bg-purple-100 dark:bg-purple-900/30 rounded text-purple-600 dark:text-purple-400">
-                            <Package size={16} />
-                        </span>
+                {/* Sekcja Zlecenia - Styl Fioletowy */}
+                <fieldset className="border-2 border-purple-100 dark:border-purple-900 bg-purple-50/50 dark:bg-purple-900/10 rounded-xl p-4 pt-5 relative shadow-sm transition-colors hover:border-purple-200 dark:hover:border-purple-800">
+                     <legend className="text-sm font-bold flex items-center gap-2 px-3 py-1 rounded-lg text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/50 absolute -top-3 left-3 shadow-sm border border-purple-200 dark:border-purple-800">
+                        <Package size={16} />
                         Zlecenia
                     </legend>
                     <div className="space-y-3 mt-1">
@@ -107,11 +103,10 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                     </div>
                 </fieldset>
                 
-                <fieldset className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 pt-4 relative">
-                     <legend className="text-sm font-semibold flex items-center gap-2 px-2 text-text bg-card absolute -top-3 left-2">
-                        <span className="p-1 bg-gray-100 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-400">
-                            <Settings size={16} />
-                        </span>
+                {/* Sekcja Standardy - Styl Neutralny/Szary */}
+                <fieldset className="border-2 border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl p-4 pt-5 relative shadow-sm transition-colors hover:border-gray-300 dark:hover:border-gray-600">
+                     <legend className="text-sm font-bold flex items-center gap-2 px-3 py-1 rounded-lg text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 absolute -top-3 left-3 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <Settings size={16} />
                         Standardy Logistyczne
                     </legend>
                     <div className="grid grid-cols-2 gap-3 mt-1">
@@ -121,36 +116,37 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                         <InputField label="Wydajność (%)" name="processEfficiency" value={data.processEfficiency} onChange={handleChange} />
                     </div>
                 </fieldset>
-            </form>
 
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-3 shrink-0">
-                <Button 
-                    type="submit" 
-                    onClick={onCalculate} 
-                    fullWidth 
-                    className="py-3 text-lg shadow-md"
-                >
-                    <Play size={20} className="mr-2 fill-current" />
-                    Oblicz Zapotrzebowanie
-                </Button>
-                
-                <div className="grid grid-cols-2 gap-3">
+                {/* Submit Button moved inside form, removed onClick to rely on onSubmit */}
+                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex flex-col gap-3 shrink-0">
                     <Button 
-                        onClick={onSave} 
-                        variant="secondary" 
+                        type="submit" 
                         fullWidth 
-                        className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+                        className="py-3 text-lg shadow-md"
                     >
-                        <Save size={18} className="mr-2" />
-                        {data.id ? 'Aktualizuj' : 'Zapisz'}
+                        <Play size={20} className="mr-2 fill-current" />
+                        Oblicz Zapotrzebowanie
                     </Button>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button 
+                            type="button"
+                            onClick={onSave} 
+                            variant="secondary" 
+                            fullWidth 
+                            className="border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+                        >
+                            <Save size={18} className="mr-2" />
+                            {data.id ? 'Aktualizuj' : 'Zapisz'}
+                        </Button>
 
-                    <Button onClick={onImport} variant="secondary" fullWidth>
-                        <Download size={18} className="mr-2"/>
-                        Demo
-                    </Button>
+                        <Button type="button" onClick={onImport} variant="secondary" fullWidth>
+                            <Download size={18} className="mr-2"/>
+                            Demo
+                        </Button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     );
 };

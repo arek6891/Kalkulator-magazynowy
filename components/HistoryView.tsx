@@ -34,20 +34,18 @@ const HistoryView: React.FC<HistoryViewProps> = ({ history, onEdit, onDelete, on
             
             const matchesSearch = term === '' || searchableString.includes(term);
 
-            // 2. Date Range Filter
+            // 2. Date Range Filter (String comparison for robustness)
             let matchesDate = true;
             if (startDate || endDate) {
+                // Get strictly the YYYY-MM-DD part
                 const recordDateStr = record.data.date || new Date(record.timestamp).toISOString().split('T')[0];
-                const recordDate = new Date(recordDateStr).getTime();
                 
                 if (startDate) {
-                    const start = new Date(startDate).getTime();
-                    if (recordDate < start) matchesDate = false;
+                    if (recordDateStr < startDate) matchesDate = false;
                 }
                 
                 if (endDate && matchesDate) {
-                    const end = new Date(endDate).getTime();
-                    if (recordDate > end) matchesDate = false;
+                    if (recordDateStr > endDate) matchesDate = false;
                 }
             }
 

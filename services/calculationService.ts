@@ -8,20 +8,18 @@ export const calculateWorkforce = (data: WarehouseData): CalculationResult => {
     error: message
   });
 
-  // 1. Defensive Destructuring & Default Values
-  const {
-    deliveries = 0,
-    itemsPerDelivery = 0,
-    deliveriesPerHour = 0,
-    orders = 0,
-    itemsPerOrder = 0,
-    itemsPickedPerHour = 0,
-    ordersPackedPerHour = 0,
-    workHours = 0,
-    currentEmployees = 0,
-    breakTime = 30, 
-    processEfficiency = 85
-  } = data || {};
+  // 1. Defensive Destructuring & Default Values with strict Number casting
+  const deliveries = Number(data?.deliveries || 0);
+  const itemsPerDelivery = Number(data?.itemsPerDelivery || 0);
+  const deliveriesPerHour = Number(data?.deliveriesPerHour || 0);
+  const orders = Number(data?.orders || 0);
+  const itemsPerOrder = Number(data?.itemsPerOrder || 0);
+  const itemsPickedPerHour = Number(data?.itemsPickedPerHour || 0);
+  const ordersPackedPerHour = Number(data?.ordersPackedPerHour || 0);
+  const workHours = Number(data?.workHours || 0);
+  const currentEmployees = Number(data?.currentEmployees || 0);
+  const breakTime = Number(data?.breakTime !== undefined ? data.breakTime : 30);
+  const processEfficiency = Number(data?.processEfficiency !== undefined ? data.processEfficiency : 85);
 
   // 2. Detailed Validation Logic
 

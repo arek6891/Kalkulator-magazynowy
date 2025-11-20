@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Calculator, Clock, Zap, Users, AlertTriangle } from 'lucide-react';
+import { X, Calculator, Clock, Zap, Users, AlertTriangle, Layers } from 'lucide-react';
 
 interface CalculationInfoModalProps {
     isOpen: boolean;
@@ -80,14 +80,31 @@ const CalculationInfoModal: React.FC<CalculationInfoModalProps> = ({ isOpen, onC
                         </div>
                     </section>
 
-                    {/* Section 4: Shortages (Braki) */}
+                    {/* Section 4: Buffer (Narzut) */}
+                    <section>
+                        <h3 className="text-lg font-semibold flex items-center gap-2 mb-3 text-primary">
+                            <Layers size={20} />
+                            4. Narzut (Buffer)
+                        </h3>
+                        <p className="text-sm text-text-secondary mb-3">
+                            Wskaźnik ten pokazuje, ilu "dodatkowych" pracowników zatrudniasz tylko dlatego, że ludzie nie są robotami (muszą mieć przerwy i nie pracują ze 100% wydajnością przez całą zmianę).
+                        </p>
+                        <div className="bg-background p-4 rounded-lg font-mono text-sm border border-gray-200 dark:border-gray-700">
+                            <span className="font-bold text-yellow-600 dark:text-yellow-500">Narzut</span> = FTE (Realne) - FTE (Teoretyczne brutto)
+                        </div>
+                        <p className="text-xs text-text-secondary mt-2">
+                            Przykład: Jeśli potrzebujesz 10 osób realnie, ale matematycznie (bez przerw i przy 100% wydajności) wystarczyłoby 8 osób, to Twój <strong>Narzut wynosi 2</strong>. To koszt "czynnika ludzkiego".
+                        </p>
+                    </section>
+
+                    {/* Section 5: Shortages (Braki) */}
                     <section>
                         <h3 className="text-lg font-semibold flex items-center gap-2 mb-3 text-primary">
                             <AlertTriangle size={20} />
-                            4. Braki (Luka Kadrowa)
+                            5. Braki (Luka Kadrowa)
                         </h3>
                         <p className="text-sm text-text-secondary mb-3">
-                            Jest to kluczowy wskaźnik operacyjny pokazujący, ilu pracowników brakuje do zrealizowania planu przy założonych standardach.
+                            Jest to kluczowy wskaźnik operacyjny pokazujący różnicę między planem a stanem faktycznym.
                         </p>
                         <div className="bg-background p-4 rounded-lg font-mono text-sm border border-gray-200 dark:border-gray-700">
                             <span className="font-bold text-red-500">Braki</span> = Wymagane FTE - Obecni Pracownicy
