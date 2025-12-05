@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { WarehouseData } from '../types';
 import InputField from './InputField';
 import Button from './Button';
 import SmartImportModal from './SmartImportModal';
-import { Package, Truck, Download, Settings, Calendar, Save, Play, Sparkles, ClipboardList, Edit3 } from 'lucide-react';
+import { Package, Box, Download, Settings, Calendar, Save, Play, Sparkles, ClipboardList, Edit3 } from 'lucide-react';
 
 interface CalculatorFormProps {
     data: WarehouseData;
@@ -17,6 +17,7 @@ interface CalculatorFormProps {
 
 const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalculate, onImport, onSave, isUpdateMode }) => {
     const [isSmartImportOpen, setIsSmartImportOpen] = useState(false);
+    const dateInputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -31,6 +32,25 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
             ...prev,
             ...parsed
         }));
+    };
+
+    // Helper to force open the calendar
+    const openDatePicker = (e: React.MouseEvent) => {
+        // e.preventDefault(); // Removed to ensure focus works as fallback
+        
+        if (dateInputRef.current) {
+            try {
+                // Modern browsers support this
+                if ('showPicker' in HTMLInputElement.prototype) {
+                    dateInputRef.current.showPicker();
+                } else {
+                    dateInputRef.current.focus();
+                }
+            } catch (error) {
+                // Fallback
+                dateInputRef.current.focus();
+            }
+        }
     };
 
     return (
@@ -51,15 +71,21 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                 </h2>
                 <div className="flex items-center gap-2">
                     <label htmlFor="date" className="sr-only">Data</label>
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary" size={16} />
+                    <div className="relative group">
+                        {/* Icon is now pointer-events-none so clicks pass through to the input */}
+                        <Calendar 
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary group-hover:text-primary transition-colors pointer-events-none" 
+                            size={16} 
+                        />
                         <input 
+                            ref={dateInputRef}
                             type="date" 
                             name="date"
                             id="date"
                             value={data.date || ''}
                             onChange={handleChange}
-                            className="pl-9 pr-3 py-1.5 bg-background border border-gray-300 dark:border-gray-600 rounded-md text-sm text-text focus:ring-2 focus:ring-primary outline-none w-36 sm:w-auto"
+                            onClick={openDatePicker}
+                            className="pl-9 pr-3 py-1.5 bg-background border border-gray-300 dark:border-gray-600 rounded-md text-sm text-text focus:ring-2 focus:ring-primary outline-none w-36 sm:w-auto cursor-pointer"
                         />
                     </div>
                 </div>
@@ -80,7 +106,7 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({ data, setData, onCalcul
                 {/* Sekcja Dostawy - Styl Niebieski */}
                 <fieldset className="border-2 border-blue-100 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl p-4 pt-5 relative shadow-sm transition-colors hover:border-blue-200 dark:hover:border-blue-800">
                     <legend className="text-sm font-bold flex items-center gap-2 px-3 py-1 rounded-lg text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 absolute -top-3 left-3 shadow-sm border border-blue-200 dark:border-blue-800">
-                        <Truck size={16} />
+                        <Box size={16} />
                         Dostawy
                     </legend>
                     <div className="space-y-3 mt-1">

@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { HistoryRecord } from '../types';
-import { FileSpreadsheet, Edit, Trash2, Search, Filter, X, Calendar } from 'lucide-react';
+import { FileSpreadsheet, Edit, Trash2, Search, Filter, X, Calendar, CalendarRange } from 'lucide-react';
 import Button from './Button';
 
 interface HistoryViewProps {
@@ -59,6 +59,59 @@ const HistoryView: React.FC<HistoryViewProps> = ({ history, onEdit, onDelete, on
         setEndDate('');
     };
 
+    const handleDatePreset = (preset: string) => {
+        const today = new Date();
+        const formatDate = (d: Date) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        let start: Date | null = null;
+        let end: Date | null = null;
+
+        switch (preset) {
+            case 'today':
+                start = today;
+                end = today;
+                break;
+            case 'yesterday':
+                start = new Date(today);
+                start.setDate(today.getDate() - 1);
+                end = new Date(start);
+                break;
+            case 'last7':
+                end = today;
+                start = new Date(today);
+                start.setDate(today.getDate() - 6);
+                break;
+            case 'last30':
+                end = today;
+                start = new Date(today);
+                start.setDate(today.getDate() - 29);
+                break;
+            case 'thisMonth':
+                start = new Date(today.getFullYear(), today.getMonth(), 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                break;
+            case 'lastMonth':
+                start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                end = new Date(today.getFullYear(), today.getMonth(), 0);
+                break;
+            case 'all':
+            default:
+                setStartDate('');
+                setEndDate('');
+                return;
+        }
+
+        if (start && end) {
+            setStartDate(formatDate(start));
+            setEndDate(formatDate(end));
+        }
+    };
+
     const hasActiveFilters = searchTerm || startDate || endDate;
 
     if (history.length === 0) {
@@ -103,7 +156,28 @@ const HistoryView: React.FC<HistoryViewProps> = ({ history, onEdit, onDelete, on
                         />
                     </div>
                     
-                    <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                        
+                        {/* Quick Presets */}
+                        <div className="flex items-center gap-2 px-2 py-2 bg-card border border-gray-300 dark:border-gray-600 rounded-md">
+                            <CalendarRange size={16} className="text-text-secondary" />
+                            <select 
+                                className="bg-transparent text-sm text-text focus:outline-none cursor-pointer border-none p-0 pr-2"
+                                onChange={(e) => handleDatePreset(e.target.value)}
+                                defaultValue=""
+                            >
+                                <option value="" disabled hidden>Szybki wybór...</option>
+                                <option value="today">Dzisiaj</option>
+                                <option value="yesterday">Wczoraj</option>
+                                <option value="last7">Ostatnie 7 dni</option>
+                                <option value="last30">Ostatnie 30 dni</option>
+                                <option value="thisMonth">Ten miesiąc</option>
+                                <option value="lastMonth">Poprzedni miesiąc</option>
+                                <option value="all">Wszystkie</option>
+                            </select>
+                        </div>
+
+                        {/* Date Range Inputs */}
                         <div className="flex items-center gap-2 px-2 py-2 bg-card border border-gray-300 dark:border-gray-600 rounded-md">
                             <Calendar size={16} className="text-text-secondary" />
                             <span className="text-xs text-text-secondary whitespace-nowrap">Od:</span>
@@ -114,7 +188,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ history, onEdit, onDelete, on
                                 className="bg-transparent text-sm text-text focus:outline-none w-32"
                             />
                         </div>
-                        <span className="text-text-secondary">-</span>
+                        <span className="text-text-secondary hidden sm:inline">-</span>
                         <div className="flex items-center gap-2 px-2 py-2 bg-card border border-gray-300 dark:border-gray-600 rounded-md">
                             <Calendar size={16} className="text-text-secondary" />
                             <span className="text-xs text-text-secondary whitespace-nowrap">Do:</span>
