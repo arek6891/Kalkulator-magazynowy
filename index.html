@@ -3,7 +3,11 @@
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="manifest.json" />
     <title>Kalkulator Pracowników Magazynu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -30,6 +34,7 @@
         --card-color: #ffffff;
         --text-color: #1f2937;
         --text-secondary-color: #6b7280;
+        -webkit-tap-highlight-color: transparent;
       }
       body.dark {
         --primary-color: #6366f1;
@@ -42,6 +47,11 @@
       body {
         background-color: var(--background-color);
         color: var(--text-color);
+        overscroll-behavior-y: contain;
+      }
+      /* Optymalizacja pod mobile */
+      input[type="number"] {
+        font-size: 16px; /* Zapobiega auto-zoomowi na iOS */
       }
     </style>
   <script type="importmap">
@@ -52,13 +62,24 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.553.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "vite": "https://esm.sh/vite@^7.3.1"
   }
 }
 </script>
 </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>Musisz włączyć JavaScript, aby korzystać z tej aplikacji.</noscript>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker zarejestrowany!'))
+            .catch(err => console.log('Błąd rejestracji SW:', err));
+        });
+      }
+    </script>
   </body>
 </html>
