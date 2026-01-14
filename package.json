@@ -2,7 +2,7 @@
 {
   "name": "warehouse-staff-calculator-v2",
   "private": true,
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
