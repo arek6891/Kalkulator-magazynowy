@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 export const parseWarehouseText = async (text: string): Promise<Partial<WarehouseData>> => {
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: `Extract logistic warehouse data from the following text. 
       If a value is not mentioned, do not include it in the JSON.
       Text: "${text}"`,
@@ -68,7 +68,7 @@ export const generateOperationalInsights = async (data: WarehouseData, result: C
         `;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash', // Flash is good enough for text generation here
+            model: 'gemini-3-flash-preview',
             contents: prompt,
         });
 
