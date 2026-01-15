@@ -2,6 +2,29 @@
 
 Aplikacja webowa typu SPA (Single Page Application) służąca do planowania zasobów ludzkich w logistyce. Pozwala na precyzyjne obliczenie zapotrzebowania na pracowników (FTE - Full Time Equivalent) w oparciu o wolumeny operacyjne oraz realne parametry wydajnościowe.
 
+## 🚀 Jak uruchomić aplikację?
+
+### Opcja A: Masz edytor w chmurze (np. AI Studio, brak terminala)
+Najszybszy sposób, aby zobaczyć aplikację na telefonie:
+
+1.  Wejdź na stronę [StackBlitz.com](https://stackblitz.com).
+2.  Wybierz **New Project** -> **Vite (Frontend)** -> **React TypeScript**.
+3.  Skopiuj pliki z tego projektu do edytora w StackBlitz (zachowując strukturę folderów `src/components`, `src/services`).
+4.  W głównym folderze stwórz plik `.env` i dodaj swój klucz API:
+    ```
+    API_KEY=twoj_klucz_google_gemini
+    ```
+5.  W panelu podglądu (Preview) zobaczysz adres URL (np. `https://vite-react-xyz.webcontainer.io`).
+6.  Wyślij ten link na swój telefon – aplikacja będzie działać!
+
+### Opcja B: Masz komputer z Node.js
+1.  Pobierz kod.
+2.  Zainstaluj zależności: `npm install`
+3.  Uruchom lokalnie: `npm run dev`
+    *   Aby widzieć na telefonie w tej samej sieci Wi-Fi: `npm run dev -- --host`
+
+---
+
 ## 🚀 Główne Funkcjonalności
 
 ### 1. Zaawansowany Algorytm Obliczeniowy (Logistyka)
@@ -52,6 +75,9 @@ Gdzie:
 ---
 
 ## 📅 Dziennik Zmian (Changelog)
+
+### [2.2.0] - Dokumentacja Wdrożeniowa
+*   Dodano instrukcję uruchamiania aplikacji online (StackBlitz) dla użytkowników bez lokalnego środowiska deweloperskiego.
 
 ### [2.0.7] - Zmiana nazwy i poprawki
 *   Zmiana nazwy aplikacji na "kalkulator_magazynowy" dla zgodności z Vercel/GitHub.
