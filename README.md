@@ -2,102 +2,65 @@
 
 Aplikacja webowa typu SPA (Single Page Application) służąca do planowania zasobów ludzkich w logistyce. Pozwala na precyzyjne obliczenie zapotrzebowania na pracowników (FTE - Full Time Equivalent) w oparciu o wolumeny operacyjne oraz realne parametry wydajnościowe.
 
-## 🚀 Jak uruchomić aplikację?
+## 🌍 Jak udostępnić aplikację znajomym? (Vercel)
 
-### Opcja A: Masz edytor w chmurze (np. AI Studio, brak terminala)
-Najszybszy sposób, aby zobaczyć aplikację na telefonie:
+Aby aplikacja działała na telefonie innej osoby pod stałym linkiem, najlepiej wdrożyć ją na darmowy hosting **Vercel**. Ponieważ Twój kod jest już na GitHubie, zajmie to 2 minuty.
 
-1.  Wejdź na stronę [StackBlitz.com](https://stackblitz.com).
-2.  Wybierz **New Project** -> **Vite (Frontend)** -> **React TypeScript**.
-3.  Skopiuj pliki z tego projektu do edytora w StackBlitz (zachowując strukturę folderów `src/components`, `src/services`).
-4.  W głównym folderze stwórz plik `.env` i dodaj swój klucz API:
-    ```
-    API_KEY=twoj_klucz_google_gemini
-    ```
-5.  W panelu podglądu (Preview) zobaczysz adres URL (np. `https://vite-react-xyz.webcontainer.io`).
-6.  Wyślij ten link na swój telefon – aplikacja będzie działać!
+### Krok 1: Przygotowanie
+1. Upewnij się, że wszystkie zmiany w StackBlitz/VS Code są wysłane na GitHub (**Commit & Push**).
+
+### Krok 2: Wdrożenie na Vercel
+1. Wejdź na stronę [vercel.com](https://vercel.com) i załóż darmowe konto (zaloguj się przez GitHub).
+2. Kliknij przycisk **"Add New..."** -> **"Project"**.
+3. Na liście "Import Git Repository" znajdź swoje repozytorium: `kalkulator_magazynowy` i kliknij **Import**.
+4. W sekcji "Configure Project" znajdź pole **Environment Variables** (Zmienne Środowiskowe):
+   * Wpisz **Key**: `API_KEY`
+   * Wpisz **Value**: (Twój klucz z Google AI Studio, zaczynający się od `AIza...`)
+   * Kliknij **Add**.
+5. Kliknij przycisk **Deploy**.
+
+### Krok 3: Gotowe!
+Po chwili Vercel wygeneruje link (np. `kalkulator-magazynowy.vercel.app`).
+* Wyślij ten link znajomemu.
+* Aplikacja działa na każdym telefonie, bez logowania.
+
+---
+
+## 🚀 Jak uruchomić lokalnie / edytować?
+
+### Opcja A: Masz edytor w chmurze (np. AI Studio, StackBlitz)
+1. Otwórz projekt w StackBlitz.
+2. W terminalu wpisz: `npm install` a potem `npm run dev`.
+3. Jeśli wystąpią błędy z wersjami, usuń plik blokady: `rm package-lock.json` i spróbuj ponownie.
 
 ### Opcja B: Masz komputer z Node.js
-1.  Pobierz kod.
-2.  Zainstaluj zależności: `npm install`
-3.  Uruchom lokalnie: `npm run dev`
-    *   Aby widzieć na telefonie w tej samej sieci Wi-Fi: `npm run dev -- --host`
+1. Pobierz kod: `git clone ...`
+2. Zainstaluj zależności: `npm install`
+3. Uruchom: `npm run dev`
 
 ---
 
 ## 🚀 Główne Funkcjonalności
 
 ### 1. Zaawansowany Algorytm Obliczeniowy (Logistyka)
-Aplikacja nie opiera się na prostym dzieleniu wolumenu przez godziny. Zastosowano standardy inżynierii procesowej:
-*   **Efektywny Czas Pracy (Net Available Time):** Automatyczne odejmowanie czasu przerw od czasu zmiany.
-*   **Wskaźnik Wydajności (OEE/Performance):** Możliwość zdefiniowania % wydajności procesu (np. 85%), uwzględniającego zmęczenie pracowników i mikropastoje.
-*   **Zaokrąglanie:** Wyniki są zaokrąglane w górę (sufit) dla zapewnienia pełnego pokrycia operacyjnego.
+*   **Efektywny Czas Pracy:** Automatyczne odejmowanie przerw.
+*   **Wskaźnik OEE:** Uwzględnienie % wydajności i zmęczenia.
+*   **FTE:** Wyniki zaokrąglane w górę dla bezpieczeństwa operacyjnego.
 
-### 2. Obsługa Kluczowych Procesów Magazynowych
-Kalkulator uwzględnia trzy główne obszary operacyjne:
-*   **Przyjęcie (Receiving):** Na podstawie liczby dostaw i normy rozładunku.
-*   **Kompletacja (Picking):** Na podstawie linii zlecenia/sztuk i normy zbierania.
-*   **Pakowanie (Packing):** Na podstawie ilości paczek/zamówień i normy pakowania.
+### 2. Obsługa Procesów
+*   Przyjęcie (Receiving)
+*   Kompletacja (Picking)
+*   Pakowanie (Packing)
 
-### 3. Interaktywny Dashboard
-*   **Wizualizacja FTE:** Wykres kołowy pokazujący podział etatu na działy.
-*   **Wizualizacja Wolumenu:** Wykres słupkowy obciążenia pracą.
-*   **Wskaźniki KPI:** Wyświetlanie efektywnego czasu pracy na osobę oraz "bufora" (narzutu wynikającego ze strat wydajności).
-
-### 4. UX / UI
-*   **Tryb Ciemny (Dark Mode):** Pełna obsługa motywu jasnego i ciemnego.
-*   **Moduł Edukacyjny:** Wbudowane okno modalne "Jak to działa?", wyjaśniające matematykę stojącą za wynikami.
-*   **Import Danych:** Możliwość załadowania przykładowego zestawu danych jednym kliknięciem.
+### 3. Dashboard i AI
+*   Wizualizacja graficzna wyników.
+*   **Inteligentny Import:** Wklej treść maila, a AI uzupełni tabelę.
+*   **Analityk AI:** Generowanie porad operacyjnych jednym kliknięciem.
 
 ---
 
 ## ⚙️ Technologia
-
-*   **Framework:** React 19
-*   **Style:** Tailwind CSS
-*   **Wykresy:** Recharts
-*   **Ikony:** Lucide React
-
----
-
-## 📝 Metodologia Obliczeń
-
-Wzór na zapotrzebowanie (FTE):
-
-```
-FTE = Pracochłonność (h) / Efektywny Czas Pracy (h)
-```
-
-Gdzie:
-1.  **Pracochłonność** = Wolumen / Norma na godzinę
-2.  **Efektywny Czas Pracy** = (Czas Zmiany - Czas Przerw) * (Wydajność %)
-
----
-
-## 📅 Dziennik Zmian (Changelog)
-
-### [2.2.0] - Dokumentacja Wdrożeniowa
-*   Dodano instrukcję uruchamiania aplikacji online (StackBlitz) dla użytkowników bez lokalnego środowiska deweloperskiego.
-
-### [2.0.7] - Zmiana nazwy i poprawki
-*   Zmiana nazwy aplikacji na "kalkulator_magazynowy" dla zgodności z Vercel/GitHub.
-*   Naprawa zależności i aktualizacja wersji.
-
-### [1.1.0] - Aktualizacja Standardów Logistycznych
-**Dodano:**
-*   Nowe pola w formularzu: "Czas przerw (min)" oraz "Wydajność procesu (%)".
-*   Ikony sekcji w formularzu (Dostawy, Zlecenia, Parametry) dla lepszej czytelności.
-*   Komponent `CalculationInfoModal` wyjaśniający metodologię obliczeń.
-*   Przycisk "Jak to działa?" w nagłówku aplikacji.
-*   Wyświetlanie "Efektywnego czasu pracy" na Dashboardzie.
-
-**Zmieniono:**
-*   Silnik obliczeniowy (`calculationService.ts`) uwzględnia teraz czas netto i współczynnik OEE zamiast prostego czasu brutto.
-*   Definicja "Bufora" na dashboardzie teraz reprezentuje narzut wynikający z przerw i strat wydajności.
-*   Zaktualizowano przykładowe dane (`mockData`) o parametry logistyczne (30 min przerwy, 85% wydajności).
-
-### [1.0.0] - Inicjalna Wersja
-*   Podstawowy kalkulator oparty na godzinach brutto.
-*   Wykresy kołowe i słupkowe.
-*   Obsługa trybu ciemnego.
-*   Podstawowa walidacja danych.
+*   React 19 + TypeScript
+*   Vite
+*   Tailwind CSS
+*   Google Gemini API (via `@google/genai`)

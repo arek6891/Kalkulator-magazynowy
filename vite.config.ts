@@ -10,8 +10,14 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      host: true,
-      port: 5173
+      host: true, // Pozwala na dostęp z zewnątrz kontenera (StackBlitz)
+      port: 5173,
+      strictPort: true, // Wymusza ten sam port, żeby link się nie zmieniał
+    },
+    preview: {
+      host: true, // To samo dla trybu podglądu produkcji
+      port: 5173,
+      strictPort: true,
     },
     define: {
       // Priorytet: 1. Zmienna systemowa (Vercel) 2. Zmienna z pliku .env (Lokalnie)
